@@ -162,6 +162,24 @@ void hapusMenu() {
     cout << "Kode menu tidak ditemukan.\n";
 }
 
+//penambahan fungsi untuk menghitung jumlah menu
+void hitungMenu() {
+    if (head == NULL) {
+        cout << "Jumlah menu: 0 (Menu kosong).\n";
+        return;
+    }
+
+    Node* p = head;
+    int jumlah = 0;
+
+    do {
+        jumlah++;
+        p = p->next;
+    } while (p != head);
+
+    cout << "Jumlah menu yang tersedia: " << jumlah << " menu.\n";
+}
+
 int main() {
     int pilih;
 
@@ -172,6 +190,7 @@ int main() {
         cout << "3. Tampilkan maju\n";
         cout << "4. Tampilkan mundur\n";
         cout << "5. Navigasi menu\n";
+        cout << "6. Hitung jumlah menu\n";
         cout << "0. Keluar\n";
         cout << "Pilihan: ";
         cin >> pilih;
@@ -182,6 +201,7 @@ int main() {
             case 3: tampilMaju(); break;
             case 4: tampilMundur(); break;
             case 5: navigasi(); break;
+            case 6: hitungMenu(); break;
             case 0: break;
             default: cout << "Pilihan salah.\n";
         }
