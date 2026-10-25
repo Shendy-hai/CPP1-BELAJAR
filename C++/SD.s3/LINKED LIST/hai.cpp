@@ -4,130 +4,172 @@
 using namespace std;
 
 struct Node {
-    string judul;
-    string penyanyi;
-    Node* prev;
+    string nama;
     Node* next;
 };
 
 Node* head = NULL;
-Node* tail = NULL;
+Node* sekarang = NULL;
 
-void tambah() {
+void tambah() { 
     Node* baru = new Node;
 
     cin.ignore(1000, '\n');
-    cout << "Judul lagu: ";
-    getline(cin, baru->judul);
+    cout << "Nama mahasiswa: ";
+    getline(cin, baru->nama);
 
-    cout << "Penyanyi  : ";
-    getline(cin, baru->penyanyi);
+    if (head == NULL) {
+        head = baru;
+        baru->next = head;
+        sekarang = head;
+    } else {
+        Node* p = head;
 
-    baru->prev = tail;
-    baru->next = NULL;
+        while (p->next != head)
+            p = p->next;
 
-    if (head == NULL)
-        head = tail = baru;
-    else {
-        tail->next = baru;
-        tail = baru;
+        p->next = baru;
+        baru->next = head;
     }
 
-    cout << "Lagu ditambahkan.\n";
+    cout << "Peserta ditambahkan.\n";
 }
 
-void tampilMaju() {
+void tampilkan() {
+    if (head == NULL) {
+        cout << "Belum ada peserta.\n";
+        return;
+    }
+
     Node* p = head;
+    int nomor = 1;
 
-    if (p == NULL) {
-        cout << "Playlist kosong.\n";
-        return;
-    }
+    cout << "\nDAFTAR PESERTA\n";
 
-    cout << "\nPLAYLIST MAJU\n";
-    while (p != NULL) {
-        cout << p->judul << " - "
-             << p->penyanyi << endl;
+    do {
+        cout << nomor++ << ". " << p->nama;
+        if (p == sekarang)
+            cout << " <-- GILIRAN SEKARANG";
+        cout << endl;
+
         p = p->next;
-    }
+    } while (p != head);
 }
 
-void tampilMundur() {
-    Node* p = tail;
-
-    if (p == NULL) {
-        cout << "Playlist kosong.\n";
+void giliranBerikutnya() {
+    if (sekarang == NULL) {
+        cout << "Belum ada peserta.\n";
         return;
     }
 
-    cout << "\nPLAYLIST MUNDUR\n";
-    while (p != NULL) {
-        cout << p->judul << " - "
-             << p->penyanyi << endl;
-        p = p->prev;
-    }
+    sekarang = sekarang->next;
+
+    cout << "Giliran berikutnya: "
+         << sekarang->nama << endl;
 }
 
-void hapusLagu() {
-    string judul;
+void hapusPeserta() {
+    if (head == NULL) {
+        cout << "Belum ada peserta.\n";
+        return;
+    }
+
+    string nama;
     cin.ignore(1000, '\n');
-
-    cout << "Judul lagu yang dihapus: ";
-    getline(cin, judul);
+    cout << "Nama peserta yang dihapus: ";
+    getline(cin, nama);
 
     Node* p = head;
+    Node* prev = head;
 
-    while (p != NULL && p->judul != judul)
+    while (prev->next != head)
+        prev = prev->next;
+
+    do {
+        if (p->nama == nama) {
+            if (p->next == p) {
+                head = NULL;
+                sekarang = NULL;
+            } else {
+                prev->next = p->next;
+
+                if (p == head)
+                    head = p->next;
+
+                if (p == sekarang)
+                    sekarang = p->next;
+            }
+
+            delete p;
+            cout << "Peserta dihapus.\n";
+            return;
+        }
+
+        prev = p;
         p = p->next;
+    } while (p != head);
 
-    if (p == NULL) {
-        cout << "Lagu tidak ditemukan.\n";
+    cout << "Peserta tidak ditemukan.\n";
+}
+
+void hitungPeserta() {
+    if (head == NULL) {
+        cout << "Jumlah peserta: 0 (Belum ada peserta).\n";
         return;
     }
 
-    if (p->prev != NULL)
-        p->prev->next = p->next;
-    else
-        head = p->next;
+    Node* p = head;
+    int jumlah = 0;
 
-    if (p->next != NULL)
-        p->next->prev = p->prev;
-    else
-        tail = p->prev;
+    do {
+        jumlah++;
+        p = p->next;
+    } while (p != head);
 
-    delete p;
-    cout << "Lagu berhasil dihapus.\n";
+    cout << "Jumlah mahasiswa dalam daftar: " << jumlah << " orang.\n";
 }
 
 int main() {
     int pilih;
 
     do {
-        cout << "\n=== PLAYLIST MUSIK ===\n";
-        cout << "1. Tambah lagu\n";
-        cout << "2. Hapus lagu\n";
-        cout << "3. Tampilkan maju\n";
-        cout << "4. Tampilkan mundur\n";
+        cout << "\n=== GILIRAN PRESENTASI ===\n";
+        cout << "1. Tambah peserta\n";
+        cout << "2. Giliran berikutnya\n";
+        cout << "3. Tampilkan peserta\n";
+        cout << "4. Hapus peserta\n";
+        cout << "5. Hitung jumlah peserta\n";
         cout << "0. Keluar\n";
         cout << "Pilihan: ";
         cin >> pilih;
 
         switch (pilih) {
             case 1: tambah(); break;
-            case 2: hapusLagu(); break;
-            case 3: tampilMaju(); break;
-            case 4: tampilMundur(); break;
+            case 2: giliranBerikutnya(); break;
+            case 3: tampilkan(); break;
+            case 4: hapusPeserta(); break;
+            case 5: hitungPeserta(); break;
             case 0: break;
             default: cout << "Pilihan salah.\n";
         }
     } while (pilih != 0);
 
     while (head != NULL) {
-        Node* p = head;
-        head = head->next;
-        delete p;
+        if (head->next == head) {
+            delete head;
+            head = NULL;
+        } else {
+            Node* p = head;
+            while (p->next != head)
+                p = p->next;
+
+            p->next = head->next;
+            Node* hapus = head;
+            head = head->next;
+            delete hapus;
+        }
     }
 
-    tail = NULL;
+    sekarang = NULL;
     return 0;
 }
