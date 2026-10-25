@@ -112,6 +112,7 @@ void hapusPeserta() {
     cout << "Peserta tidak ditemukan.\n";
 }
 
+// penambahan fungsi untuk menghitung jumlah peserta
 void hitungPeserta() {
     if (head == NULL) {
         cout << "Jumlah peserta: 0 (Belum ada peserta).\n";
