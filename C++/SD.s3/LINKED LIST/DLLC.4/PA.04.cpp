@@ -14,10 +14,24 @@ Node* head = NULL;
 Node* sekarang = NULL;
 
 void tambah() {
-    Node* baru = new Node;
-
+    int kode;
     cout << "Kode menu: ";
-    cin >> baru->kode;
+    cin >> kode;
+
+    // Validasi agar kode menu tidak duplikat
+    if (head != NULL) {
+        Node* p = head;
+        do {
+            if (p->kode == kode) {
+                cout << "Kode menu sudah digunakan!\n";
+                return;
+            }
+            p = p->next;
+        } while (p != head);
+    }
+
+    Node* baru = new Node;
+    baru->kode = kode;
     cin.ignore(1000, '\n');
 
     cout << "Nama menu: ";
