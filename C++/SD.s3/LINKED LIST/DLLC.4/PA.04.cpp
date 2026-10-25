@@ -43,6 +43,7 @@ void tambah() {
     cout << "Menu ditambahkan.\n";
 }
 
+//modifikasi fungsi tampilkan untuk menampilkan menu maju dan mundur
 void tampilMaju() {
     if (head == NULL) {
         cout << "Menu kosong.\n";
@@ -53,7 +54,11 @@ void tampilMaju() {
     cout << "\nURUTAN MENU MAJU\n";
 
     do {
-        cout << p->kode << " - " << p->nama << endl;
+        cout << p->kode << " - " << p->nama;
+        if (p == sekarang)
+            cout << " <-- MENU AKTIF";
+        cout << endl;
+
         p = p->next;
     } while (p != head);
 }
@@ -70,11 +75,16 @@ void tampilMundur() {
     cout << "\nURUTAN MENU MUNDUR\n";
 
     do {
-        cout << p->kode << " - " << p->nama << endl;
+        cout << p->kode << " - " << p->nama;
+        if (p == sekarang)
+            cout << " <-- MENU AKTIF";
+        cout << endl;
+
         p = p->prev;
     } while (p != terakhir);
 }
 
+//modifikasi fungsi navigasi untuk menavigasi menu maju dan mundur
 void navigasi() {
     if (sekarang == NULL) {
         cout << "Menu kosong.\n";
@@ -82,19 +92,21 @@ void navigasi() {
     }
 
     char arah;
-    cout << "N = Berikutnya, P = Sebelumnya: ";
-    cin >> arah;
 
-    if (arah == 'N' || arah == 'n')
-        sekarang = sekarang->next;
-    else if (arah == 'P' || arah == 'p')
-        sekarang = sekarang->prev;
-    else {
-        cout << "Arah tidak valid.\n";
-        return;
-    }
+    do {
+        cout << "\nN = Berikutnya, P = Sebelumnya, 0 = Selesai: ";
+        cin >> arah;
 
-    cout << "Menu aktif: " << sekarang->nama << endl;
+        if (arah == 'N' || arah == 'n') {
+            sekarang = sekarang->next;
+            cout << "Menu aktif: " << sekarang->nama << endl;
+        } else if (arah == 'P' || arah == 'p') {
+            sekarang = sekarang->prev;
+            cout << "Menu aktif: " << sekarang->nama << endl;
+        } else if (arah != '0') {
+            cout << "Arah tidak valid.\n";
+        }
+    } while (arah != '0');
 }
 
 void hapusMenu() {
